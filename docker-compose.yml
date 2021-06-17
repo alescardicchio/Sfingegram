@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  consul:
+    image: consul
+    networks:
+      - sfingegram-net
+
+  apigateway:
+    build: ./api-gateway
+    image: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "consul"
+    networks:
+      - sfingegram-net
+
+  connessioni:
+    build: ./connessioni
+    image: connessioni
+    depends_on:
+      - "consul"
+    networks:
+      - sfingegram-net
+
+  enigmi:
+    build: ./enigmi
+    image: enigmi
+    depends_on:
+      - "consul"
+    networks:
+      - sfingegram-net
+
+  enigmi-seguiti:
+    build: ./enigmi-seguiti
+    image: enigmi-seguiti
+    depends_on:
+      - "consul"
+    networks:
+      - sfingegram-net
+
+  enigmi-mysql:
+    image: mysql:8.0.16
+    environment:
+      MYSQL_DATABASE: "database"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+    networks:
+      - sfingegram-net
+
+  connessioni-mysql:
+    image: mysql:8.0.16
+    environment:
+      MYSQL_DATABASE: "database"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+    networks:
+      - sfingegram-net
+
+  enigmi-seguiti-mysql:
+    image: mysql:8.0.16
+    environment:
+      MYSQL_DATABASE: "database"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+    networks:
+      - sfingegram-net
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - sfingegram-net
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    depends_on:
+      - "zookeeper"
+    ports:
+      - "9092:9092"
+    networks:
+      - sfingegram-net
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "enigmi:4:1,connessioni:4:1"
+
+networks:
+  sfingegram-net:
+    driver: bridge

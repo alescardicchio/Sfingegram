@@ -1,0 +1,55 @@
+# application.yml 
+---
+spring:
+  application:
+    name: enigmi-seguiti
+  cloud:
+    consul:
+      host: consul
+      port: 8500
+      discovery:
+        instanceId: ${spring.application.name}-${spring.cloud.client.hostname}-${random.value}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 10s
+        # configurazione per effettuare esprimenti, NON USARE UN PRODUZIONE
+        # dopo quanto tempo consul deve smettere di restituire servizi che non rispondono all'health check?
+        healthCheckCriticalTimeout: 45s
+        # consul deve restituire solo servizi che passano l'health check (default=false)
+        queryPassing: true
+    loadbalancer:
+      ribbon.enabled: false
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://enigmi-seguiti-mysql:3306/database
+    username: user
+    password: password
+  jpa:
+    hibernate.ddl-auto: update
+  # Kafka
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*'
+      groupid: enigmiseguiti-consumer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+
+# Messaging
+asw:
+  kafka:
+    channel:
+      enigmi:
+        in: enigmi
+      connessioni:
+        in: connessioni
+    groupid: enigmiseguiti-consumer
+
+server:
+  port: ${PORT:${SERVER_PORT:0}}
+#  port: 8080
+
