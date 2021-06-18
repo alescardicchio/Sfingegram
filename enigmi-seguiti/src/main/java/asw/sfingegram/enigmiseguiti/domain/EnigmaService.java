@@ -34,7 +34,6 @@ public class EnigmaService {
 		enigma.setTipo(tipo);
 		enigma.setTitolo(titolo);
 		enigma.setTesto(testo);
-		System.out.println("Enigma creato nel database Enigmi-Seguiti!");
 		return this.enigmaRepository.save(enigma);
 	}
 

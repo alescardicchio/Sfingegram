@@ -32,7 +32,6 @@ public class ConnessioniService {
 				connessione.getAutore()
 		);
 		this.connessioneDomainEventPublisher.publish(domainEvent);
-		System.out.println("ConnessioneConAutore Creata, Evento Pubblicato!\n\n");
 		return connessione;
 	}
 
@@ -45,7 +44,6 @@ public class ConnessioniService {
 				connessione.getTipo()
 		);
 		this.connessioneDomainEventPublisher.publish(domainEvent);
-		System.out.println("ConnessioneConTipo Creata, Evento Pubblicato!\n\n");
 		return connessione;
 	}
 

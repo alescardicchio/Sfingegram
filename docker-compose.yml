@@ -21,6 +21,8 @@ services:
     image: connessioni
     depends_on:
       - "consul"
+      - "kafka"
+      - "connessioni-mysql"
     networks:
       - sfingegram-net
 
@@ -29,6 +31,8 @@ services:
     image: enigmi
     depends_on:
       - "consul"
+      - "kafka"
+      - "enigmi-mysql"
     networks:
       - sfingegram-net
 
@@ -37,6 +41,8 @@ services:
     image: enigmi-seguiti
     depends_on:
       - "consul"
+      - "kafka"
+      - "enigmi-seguiti-mysql"
     networks:
       - sfingegram-net
 

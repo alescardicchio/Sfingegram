@@ -24,7 +24,6 @@ public class ConnessioneConTipoService {
 		ConnessioneConTipo connessioneConTipo = new ConnessioneConTipo();
 		connessioneConTipo.setTipo(tipo);
 		connessioneConTipo.setUtente(utente);
-		System.out.println("ConnessioneConTipo creata nel database Enigmi-Seguiti!");
 		return this.connessioneConTipoRepository.save(connessioneConTipo);
 	}
 }

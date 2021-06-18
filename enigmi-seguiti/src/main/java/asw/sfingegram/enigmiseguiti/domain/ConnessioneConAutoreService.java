@@ -24,7 +24,6 @@ public class ConnessioneConAutoreService {
         ConnessioneConAutore connessioneConAutore = new ConnessioneConAutore();
         connessioneConAutore.setAutore(autore);
         connessioneConAutore.setUtente(utente);
-        System.out.println("ConnessioneConAutore creata nel database Enigmi-Seguiti!");
         return this.connessioneConAutoreRepository.save(connessioneConAutore);
     }
 

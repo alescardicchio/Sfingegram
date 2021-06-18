@@ -32,7 +32,6 @@ public class EnigmiService {
 				enigma.getTesto()
 		);
 		this.enigmaDomainEventPublisher.publish(domainEvent);
-		System.out.println("Enigma Creato, Evento Pubblicato!\n\n");
 		return enigma;
 	}
 

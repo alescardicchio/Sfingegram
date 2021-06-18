@@ -18,7 +18,6 @@ public class EnigmaEventListner {
     public void listen(ConsumerRecord<String, DomainEvent> record) throws Exception {
         DomainEvent event = record.value();
         enigmiSeguitiEventHandler.onEvent(event);
-        System.out.println("Evento ricevuto sul canale 'enigmi'!");
     }
 
 }

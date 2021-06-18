@@ -19,7 +19,6 @@ public class ConnessioneEventListner {
     public void listen(ConsumerRecord<String, DomainEvent> record) {
         DomainEvent event = record.value();
         enigmiSeguitiEventHandler.onEvent(event);
-        System.out.println("Evento ricevuto sul canale 'connessioni'!");
     }
 
 }
