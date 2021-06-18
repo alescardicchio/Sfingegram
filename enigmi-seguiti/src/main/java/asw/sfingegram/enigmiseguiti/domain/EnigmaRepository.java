@@ -16,4 +16,5 @@ public interface EnigmaRepository extends CrudRepository<Enigma,Long> {
     public Collection<Enigma> findByTipoIn(Collection<String> tipi);
 
     public Collection<Enigma> findByTipoStartingWith(String tipo);
+
 }

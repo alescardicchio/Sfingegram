@@ -10,10 +10,13 @@ import java.util.stream.*;
 public class EnigmiSeguitiService {
 
 	@Autowired
-	private ConnessioniService connessioniService;
+	private ConnessioneConTipoService connessioneConTipoService;
 
 	@Autowired
-	private EnigmiService enigmiService;
+	private ConnessioneConAutoreService connessioneConAutoreService;
+
+	@Autowired
+	private EnigmaService enigmaService;
 
 	@Autowired
 	private EnigmaRepository enigmaRepository;
@@ -24,55 +27,83 @@ public class EnigmiSeguitiService {
 	@Autowired
 	private ConnessioneConTipoRepository connessioneConTipoRepository;
 
-	/* Memorizza un enigma (in formato breve) nel database del servizio EnigmiSeguiti */
-	public Enigma createEnigma(String autore, String tipo, String titolo, String[] testo) {
-		Enigma enigma = new Enigma();
-		enigma.setAutore(autore);
-		enigma.setTipo(tipo);
-		enigma.setTitolo(titolo);
-		enigma.setTesto(testo);
-		System.out.println("Enigma creato nel database Enigmi-Seguiti!");
-		return this.enigmaRepository.save(enigma);
+	@Autowired
+	private EnigmiSeguitiRepository enigmiSeguitiRepository;
+
+
+	public void updateEnigmiSeguiti(Enigma enigma) {
+		EnigmiSeguiti es;
+		for(ConnessioneConTipo c : connessioneConTipoService.getConnessioniConTipoByTipo(enigma.getTipo())) {
+			es = new EnigmiSeguiti();
+			es.setUtente(c.getUtente());
+			es.setIdEnigma(enigma.getId());
+			es.setAutoreEnigma(enigma.getAutore());
+			es.setTipoEnigma(enigma.getTipo());
+			es.setTitoloEnigma(enigma.getTitolo());
+			es.setTestoEnigma(enigma.getTesto());
+
+			enigmiSeguitiRepository.save(es);
+		}
+
+		for(ConnessioneConAutore c : connessioneConAutoreService.getConnessioniConAutoriByAutore(enigma.getAutore())) {
+			es = new EnigmiSeguiti();
+			es.setUtente(c.getUtente());
+			es.setIdEnigma(enigma.getId());
+			es.setAutoreEnigma(enigma.getAutore());
+			es.setTipoEnigma(enigma.getTipo());
+			es.setTitoloEnigma(enigma.getTitolo());
+			es.setTestoEnigma(enigma.getTesto());
+
+			enigmiSeguitiRepository.save(es);
+		}
 	}
 
-	/* Memorizza una connessione con tipo nel database del servizio EnigmiSeguiti */
-	public ConnessioneConTipo createConnessioneConTipo(String tipo, String utente) {
-		ConnessioneConTipo connessioneConTipo = new ConnessioneConTipo();
-		connessioneConTipo.setTipo(tipo);
-		connessioneConTipo.setUtente(utente);
-		System.out.println("ConnessioneConTipo creata nel database Enigmi-Seguiti!");
-		return this.connessioneConTipoRepository.save(connessioneConTipo);
+	public void updateEnigmiSeguiti(ConnessioneConTipo connessione) {
+		EnigmiSeguiti es;
+		for(Enigma enigma : enigmaService.getEnigmiByTipo(connessione.getTipo())) {
+			es = new EnigmiSeguiti();
+			es.setUtente(connessione.getUtente());
+			es.setIdEnigma(enigma.getId());
+			es.setAutoreEnigma(enigma.getAutore());
+			es.setTipoEnigma(enigma.getTipo());
+			es.setTitoloEnigma(enigma.getTitolo());
+			es.setTestoEnigma(enigma.getTesto());
+
+			enigmiSeguitiRepository.save(es);
+		}
+
 	}
 
-	/* Memorizza una connessione con autore nel database del servizio EnigmiSeguiti */
-	public ConnessioneConAutore createConnessioneConAutore(String autore, String utente) {
-		ConnessioneConAutore connessioneConAutore = new ConnessioneConAutore();
-		connessioneConAutore.setAutore(autore);
-		connessioneConAutore.setUtente(utente);
-		System.out.println("ConnessioneConAutore creata nel database Enigmi-Seguiti!");
-		return this.connessioneConAutoreRepository.save(connessioneConAutore);
+	public void updateEnigmiSeguiti(ConnessioneConAutore connessione) {
+		EnigmiSeguiti es;
+		for(Enigma enigma : enigmaService.getEnigmiByAutore(connessione.getAutore())) {
+			es = new EnigmiSeguiti();
+			es.setUtente(connessione.getUtente());
+			es.setIdEnigma(enigma.getId());
+			es.setAutoreEnigma(enigma.getAutore());
+			es.setTipoEnigma(enigma.getTipo());
+			es.setTitoloEnigma(enigma.getTitolo());
+			es.setTestoEnigma(enigma.getTesto());
+
+			enigmiSeguitiRepository.save(es);
+		}
 	}
 
 	/* Trova gli enigmi (in formato breve) degli utenti seguiti da utente. */ 
-	public Collection<Enigma> getEnigmiSeguiti(String utente) {
-		Collection<Enigma> enigmi = new TreeSet<>(); 		
-		Collection<Enigma> enigmiDiAutoriSeguiti = getEnigmiDiAutoriSeguiti(utente);
-		Collection<Enigma> enigmiDiTipiSeguiti = getEnigmiDiTipiSeguiti(utente); 
-		enigmi.addAll(enigmiDiAutoriSeguiti); 
-		enigmi.addAll(enigmiDiTipiSeguiti); 
-		return enigmi; 
+	public Collection<EnigmiSeguiti> getEnigmiSeguiti(String utente) {
+		return this.enigmiSeguitiRepository.findByUtente(utente);
 	}
 
 	private Collection<Enigma> getEnigmiDiAutoriSeguiti(String utente) {
 		Collection<Enigma> enigmi = new TreeSet<>(); 
-		Collection<ConnessioneConAutore> connessioniConAutori = connessioniService.getConnessioniConAutoriByUtente(utente); 
+		Collection<ConnessioneConAutore> connessioniConAutori = connessioneConAutoreService.getConnessioniConAutoriByUtente(utente);
 		Collection<String> autoriSeguiti = 
 			connessioniConAutori
 				.stream()
 				.map(c -> c.getAutore())
 				.collect(Collectors.toSet()); 
 		if (autoriSeguiti.size()>0) {
-			Collection<Enigma> enigmiDiAutoriSeguiti = enigmiService.getEnigmiByAutori(autoriSeguiti);
+			Collection<Enigma> enigmiDiAutoriSeguiti = enigmaService.getEnigmiByAutori(autoriSeguiti);
 			enigmi.addAll(enigmiDiAutoriSeguiti); 
 		}
 		return enigmi; 
@@ -80,14 +111,14 @@ public class EnigmiSeguitiService {
 
 	private Collection<Enigma> getEnigmiDiTipiSeguiti(String utente) {
 		Collection<Enigma> enigmi = new TreeSet<>(); 
-		Collection<ConnessioneConTipo> connessioniConTipi = connessioniService.getConnessioniConTipiByUtente(utente); 
+		Collection<ConnessioneConTipo> connessioniConTipi = connessioneConTipoService.getConnessioniConTipoByUtente(utente);
 		Collection<String> tipiSeguiti = 
 			connessioniConTipi
 				.stream()
 				.map(c -> c.getTipo())
 				.collect(Collectors.toSet()); 
 		if (tipiSeguiti.size()>0) {
-			Collection<Enigma> enigmiDiTipiSeguiti = enigmiService.getEnigmiByTipi(tipiSeguiti);
+			Collection<Enigma> enigmiDiTipiSeguiti = enigmaService.getEnigmiByTipi(tipiSeguiti);
 			enigmi.addAll(enigmiDiTipiSeguiti); 
 		}
 		return enigmi; 

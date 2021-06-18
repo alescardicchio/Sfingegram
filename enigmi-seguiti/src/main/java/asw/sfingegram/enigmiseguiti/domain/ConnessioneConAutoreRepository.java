@@ -10,4 +10,6 @@ public interface ConnessioneConAutoreRepository extends CrudRepository<Connessio
 
     public Collection<ConnessioneConAutore> findByUtente(String utente);
 
+    public Collection<ConnessioneConAutore> findAllByAutore(String autore);
+
 }

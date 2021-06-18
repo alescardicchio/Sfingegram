@@ -11,6 +11,15 @@ import org.springframework.stereotype.Service;
 public class EnigmiSeguitiEventHandler {
 
     @Autowired
+    private EnigmaService enigmaService;
+
+    @Autowired
+    private ConnessioneConAutoreService connessioneConAutoreService;
+
+    @Autowired
+    private ConnessioneConTipoService connessioneConTipoService;
+
+    @Autowired
     private EnigmiSeguitiService enigmiSeguitiService;
 
 
@@ -33,25 +42,28 @@ public class EnigmiSeguitiEventHandler {
     }
 
     private void createConnessioneConTipo(ConnessioneConTipoCreatedEvent e) {
-        this.enigmiSeguitiService.createConnessioneConTipo(
+        ConnessioneConTipo c = this.connessioneConTipoService.createConnessioneConTipo(
                 e.getTipo(),
                 e.getUtente()
         );
+        this.enigmiSeguitiService.updateEnigmiSeguiti(c);
     }
 
     private void createEnigma(EnigmaCreatedEvent e) {
-        this.enigmiSeguitiService.createEnigma(
+        Enigma enigma = this.enigmaService.createEnigma(
                 e.getAutore(),
                 e.getTipo(),
                 e.getTitolo(),
                 e.getTesto()
         );
+        this.enigmiSeguitiService.updateEnigmiSeguiti(enigma);
     }
 
     private void createConnessioneConAutore(ConnessioneConAutoreCreatedEvent e) {
-        this.enigmiSeguitiService.createConnessioneConAutore(
+        ConnessioneConAutore c = this.connessioneConAutoreService.createConnessioneConAutore(
                 e.getAutore(),
                 e.getUtente()
         );
+        this.enigmiSeguitiService.updateEnigmiSeguiti(c);
     }
 }

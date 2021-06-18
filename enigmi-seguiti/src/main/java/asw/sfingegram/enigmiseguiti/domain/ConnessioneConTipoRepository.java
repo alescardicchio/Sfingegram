@@ -10,4 +10,5 @@ public interface ConnessioneConTipoRepository extends CrudRepository<Connessione
 
     public Collection<ConnessioneConTipo> findByUtente(String utente);
 
+    public Collection<ConnessioneConTipo> findAllByTipo(String tipo);
 }
