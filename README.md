@@ -1,6 +1,53 @@
 # SFINGEGRAM 
 
-Progetto del corso di Analisi e progettazione del software per l'anno accademico 2020-2021. 
+Progetto del corso di [Architetture dei Sistemi Software](http://cabibbo.inf.uniroma3.it/asw/) per l'anno accademico 2020-2021. 
+
+#### TEAM COMPOSTO DA:
+
+- Alessandro Scardicchio
+- Alexandru Rotariu
+- Maria Carmela Pascale
+- Michela Pascale
+- Susanna Valentina Papetti
+
+
+
+## Esecuzione 
+
+Per eseguire questo progetto: 
+
+* per avviare l'applicazione *Sfingegram* mandando in esecuzione **una singola istanza per ciascun servizio**, eseguire lo script 
+ `run-sfingegram-single-service.sh`
+
+* per avviare l'applicazione *Sfingegram* mandando in esecuzione **più istanze per ciascun servizio**, eseguire lo script 
+ `run-sfingegram-multiple-services.sh`
+
+* per interrompere l'applicazione *Sfingegram*, eseguire lo script `stop-sfingegram.sh`
+
+* per inizializzare le basi di dati con dei dati di esempio, eseguire gli script `init-databases.sh` 
+
+
+## Tecnologie utilizzate
+
+- Per i servizi enigmi, connessioni e enigmi-seguiti, è stata utilizzata come base di dati **MySQL**
+- Per realizzare i canali per lo scambio di messaggi asincroni tra i servizi, è stato utilizzato come message broker **Kafka**
+- Per il rilascio dell'applicazione e la composizione dei container, è stato utilizzato **Docker-Compose**
+
+
+## Descrizione delle attività svolte 
+
+### Specifica dei container e del database
+- Aggiunta del *Dockerfile* per la creazione dell'immagine del container per ogni servizio
+- Aggiunta del file *docker-compose.yml* per effettuare il deploy, combinare ed configurare più container Docker allo stesso momento
+- Nei servizi enigmi e connessioni, è stata introdotta una base di dati MySQL al posto di HSQLDB (eseguita in un contenitore Docker separato)
+
+### Configurazione per Kafka e Zookeper
+- Configurazione di due canali Kafka per l'inoltro dei messaggi asincroni. Il servizio enigmi pubblica eventi sul canale *enigmi* ed il servizio connessioni pubblica eventi sul canale *connessioni*. Su quest'ultimo canale avviene sia la pubblicazione delle connessioni utente-autore che quelle utente-tipo.
+- Il consumatore è il servizio enigmi-seguiti, che riceve comandi dai due produttori *enigmi* e *connessioni*
+
+### Modifica della logica del servizio enigmi-seguiti
+- Introduzione di un database *My-SQL* (in un container Docker separato) nell'*application.yml* dedicato al servizio enigmi-seguiti, in modo tale che possa rispondere alle richieste GET accedendo solo alla propria tabella *enigmi-seguiti*. Sono state quindi eliminate le classi che si occupavano della comunicazione REST del servizio enigmi-seguiti con enigmi e connessioni.
+
 
 
 ## Descrizione di questo progetto 
@@ -42,50 +89,3 @@ L'applicazione *Sfingegram* è composta dai seguenti microservizi:
   * espone il servizio *enigmi* sul path `/enigmi` - ad esempio, `GET /enigmi/enigmi`
   * espone il servizio *connessioni* sul path `/connessioni` - ad esempio, `GET /connessioni/connessioniconautori/{utente}`
   * espone il servizio *enigmi-seguiti* sul path `/enigmi-seguiti` - ad esempio, `GET /enigmi-seguiti/enigmiseguiti/{utente}`
-
-
-## Esecuzione 
-
-Per eseguire questo progetto: 
-
-* avviare *Consul* eseguendo lo script `start-consul.sh` 
-
-* per avviare l'applicazione *Sfingegram*, eseguire lo script `run-sfingegram.sh` 
-
-* per inizializzare le basi di dati con dei dati di esempio, eseguire gli script `do-init-enigmi.sh` e `do-init-connessioni.sh` 
-
-
-Sono anche forniti alcuni script di esempio: 
-
-* lo script `run-curl-client.sh` esegue un insieme di interrogazioni di esempio 
-
-* lo script `do-get-enigmi.sh` trova tutti gli enigmi 
-
-* lo script `do-get-enigma.sh` trova un enigma 
-
-* lo script `do-get-enigmi-di-autore.sh` trova tutti gli enigmi di un certo autore 
-
-* lo script `do-get-enigmi-di-autori.sh` trova tutti gli enigmi di un insieme di autori  
-
-* lo script `do-get-enigmi-di-tipo.sh` trova tutti gli enigmi di un certo tipo  
-
-* lo script `do-get-enigmi-di-tipi.sh` trova tutti gli enigmi di un insieme di tipi  
-
-* lo script `do-get-connessioni.sh` trova tutte le connessioni 
-
-* lo script `do-get-enigmi-seguiti.sh` trova tutti gli enigmi seguiti da un certo utente 
-
-Ed inoltre: 
-
-* lo script `do-post-altri-enigmi.sh` aggiunge nuovi enigmi 
-
-* lo script `do-post-altre-connessioni.sh` aggiunge nuove connessioni 
-
-Alla fine, l'applicazione può essere arrestata usando lo script `stop-java-processes.sh` (**da usare con cautela!**). 
-
-Inoltre, *Consul* può essere arrestato con lo script `stop-consul.sh`. 
-
-
-## Descrizione delle attività da svolgere 
-
-Si veda la descrizione del progetto sul sito web del corso di [Architettura dei sistemi software](http://cabibbo.dia.uniroma3.it/asw/).
