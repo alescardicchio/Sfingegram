@@ -36,9 +36,9 @@ Per eseguire questo progetto:
 
 ## Descrizione delle attività svolte 
 
-### Specifica dei container e del database
+### Specifica dei container Docker e dei database
 - Aggiunta del *Dockerfile* per la creazione dell'immagine del container per ogni servizio
-- Aggiunta del file *docker-compose.yml* per effettuare il deploy, combinare ed configurare più container Docker allo stesso momento
+- Aggiunta del file *docker-compose.yml* per effettuare il deploy, combinare e configurare più container Docker allo stesso momento
 - Nei servizi enigmi e connessioni, è stata introdotta una base di dati MySQL al posto di HSQLDB (eseguita in un contenitore Docker separato)
 
 ### Configurazione per Kafka e Zookeper
