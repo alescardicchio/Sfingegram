@@ -1,7 +1,15 @@
 # SFINGEGRAM 
 
-Progetto del corso di Analisi e progettazione del software per l'anno accademico 2020-2021. 
+Progetto del corso di Architetture dei Sistemi Software per l'anno accademico 2020-2021. 
 
+#### TEAM COMPOSTO DA:
+![](image)
+
+- Alessandro Scardicchio
+- Alexandru Rotariu
+- Maria Carmela Pascale
+- Michela Pascale
+- Susanna Valentina Papetti
 
 ## Descrizione di questo progetto 
 
@@ -85,7 +93,24 @@ Alla fine, l'applicazione può essere arrestata usando lo script `stop-java-proc
 
 Inoltre, *Consul* può essere arrestato con lo script `stop-consul.sh`. 
 
+## Tecnologie utilizzate
 
-## Descrizione delle attività da svolgere 
+- Per i servizi enigmi, connessioni e enigmi-seguiti, è stata utilizzata come base di dati **MySQL**
+- Per realizzare i canali per lo scambio di messaggi tra i servizi, è stata utilizzato **Kafka**
+- Per il rilascio dell'applicazione e per la composizione dei diversi container, è stato utilizzato **Docker-Compose**
 
-Si veda la descrizione del progetto sul sito web del corso di [Architettura dei sistemi software](http://cabibbo.dia.uniroma3.it/asw/).
+## Descrizione delle attività svolte 
+
+### Specifica dei container e del database
+- Aggiunta del *Dockerfile* per la creazione dell'immagine per ogni container
+- Specifica del file *docker-compose.yml* per la containerizzazione dei servizi usando il servizio consul come dipendenza (?)
+- Specifica del database *my-sql* nell'*application.yml* dei servizi enigmi e connessioni
+
+### Configurazione per Kafka e Zookeper
+- Configurazione di due canali Kafka per l'inoltro dei messaggi. Il servizio enigmi pubblica eventi sul canale *enigmi* e il servizio connessioni pubblica eventi sul canale *connessioni*. Su quest'ultimo canale avviene sia la pubblicazione delle connessioni utente-autore che quelle utente-tipo.
+- IL consumatore è il servizio enigmi-seguiti, che riceve comandi dai due publisher *enigmi* e *connessioni*
+- common (?)
+
+### Modifica della logica del servizio enigmi-seguiti
+- Aggiunta del container e specifica del database *my-sql* nell'*application.yml* del servizio enigmi-seguiti. Poiché questo ha una propria base di dati (separata dalle
+precedenti, in un container Docker separato), può rispondere alle richieste GET accedendo solo alla propria tabella *enigmi_seguiti*. Sono state quindi eliminate le classi che si occupavano della comunicazione REST del servizio enigmi-seguiti con enigmi e connessioni.
