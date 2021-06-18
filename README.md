@@ -24,12 +24,12 @@ Per eseguire questo progetto:
 
 * per interrompere l'applicazione *Sfingegram*, eseguire lo script `stop-sfingegram.sh`
 
-* per inizializzare le basi di dati con dei dati di esempio, eseguire gli script `init-databases.sh` 
+* per inizializzare le basi di dati con dei dati di esempio, eseguire lo script `init-databases.sh` 
 
 
 ## Tecnologie utilizzate
 
-- Per i servizi enigmi, connessioni e enigmi-seguiti, è stata utilizzata come base di dati **MySQL**
+- Per i servizi enigmi, connessioni ed enigmi-seguiti, è stata utilizzata come base di dati **MySQL**
 - Per realizzare i canali per lo scambio di messaggi asincroni tra i servizi, è stato utilizzato come message broker **Kafka**
 - Per il rilascio dell'applicazione e la composizione dei container, è stato utilizzato **Docker-Compose**
 
